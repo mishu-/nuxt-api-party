@@ -1,6 +1,7 @@
 import type { ModuleOptions } from '../../module'
 import type { EndpointFetchOptions } from '../types'
 import { useRuntimeConfig } from '#imports'
+import { useNuxtApp } from '#app'
 import {
   createError,
   defineEventHandler,
@@ -59,6 +60,10 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Base URL "${baseURL}" is not allowed`,
     })
   }
+
+  // Add any server runtime headers you might want
+  const nuxtApp = useNuxtApp()
+  nuxtApp.callHook('api-party:server-headers', headers)
 
   try {
     const response = await globalThis.$fetch.raw<ArrayBuffer>(
