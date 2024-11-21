@@ -1,7 +1,7 @@
 import type { ModuleOptions } from '../../module'
 import type { EndpointFetchOptions } from '../types'
 import { useRuntimeConfig } from '#imports'
-import { useNuxtApp } from '#app'
+import { useNitroApp } from '#nitro'
 import {
   createError,
   defineEventHandler,
@@ -62,8 +62,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // Add any server runtime headers you might want
-  const nuxtApp = useNuxtApp()
-  nuxtApp.callHook('api-party:server-headers', headers)
+  const nitroApp = useNitroApp()
+
+  nitroApp.hooks.callHook('api-party:server-headers', headers)
 
   try {
     const response = await globalThis.$fetch.raw<ArrayBuffer>(
