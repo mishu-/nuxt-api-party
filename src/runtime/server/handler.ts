@@ -1,4 +1,5 @@
 import type { ModuleOptions } from '../../module'
+import type { H3Event } from 'h3'
 import type { EndpointFetchOptions } from '../types'
 import { useRuntimeConfig } from '#imports'
 import { createHooks } from 'hookable'
