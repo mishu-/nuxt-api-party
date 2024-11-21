@@ -72,8 +72,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // Add any server runtime headers you might want
-  await sessionHooks.callHookParallel('clear',  event)
-  
+  await serverHooks.callHook(endpoints, event)
+
 
   try {
     const response = await globalThis.$fetch.raw<ArrayBuffer>(
