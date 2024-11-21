@@ -1,7 +1,8 @@
 import type { ModuleOptions } from '../../module'
 import type { EndpointFetchOptions } from '../types'
 import { useRuntimeConfig } from '#imports'
-import { useNitroApp } from '#nitro'
+import { createHooks } from 'hookable'
+
 import {
   createError,
   defineEventHandler,
@@ -14,6 +15,14 @@ import {
   splitCookiesString,
 } from 'h3'
 import { deserializeMaybeEncodedBody } from '../utils'
+
+export interface ServerHooks {
+  headersPreRequest: (headers: HeadersInit, event: H3Event) => void | Promise<void>
+
+}
+
+export const serverHooks = createHooks<ServerHooks>()
+
 
 export default defineEventHandler(async (event) => {
   const endpointId = getRouterParam(event, 'endpointId')!
@@ -62,9 +71,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // Add any server runtime headers you might want
-  const nitroApp = useNitroApp()
-
-  nitroApp.hooks.callHook('api-party:server-headers', headers)
+  await sessionHooks.callHookParallel('clear',  event)
+  
 
   try {
     const response = await globalThis.$fetch.raw<ArrayBuffer>(
