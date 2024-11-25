@@ -157,6 +157,18 @@ const module = defineNuxtModule({
       logger.warn("OpenAPI types generation is enabled, but the `openapi-typescript` package is not found. Please install it to enable endpoint types generation.");
       schemaEndpointIds.length = 0;
     }
+    if (nuxt.options.nitro.imports !== false) {
+      nuxt.options.nitro.imports = defu(nuxt.options.nitro.imports, {
+        presets: [
+          {
+            from: resolve("./runtime/server/handler"),
+            imports: [
+              "serverHooks"
+            ]
+          }
+        ]
+      });
+    }
     addServerHandler({
       route: joinURL("/api", options.server.basePath, ":endpointId"),
       handler: resolve("runtime/server/handler"),

@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Base URL "${baseURL}" is not allowed`
     });
   }
-  await serverHooks.callHook(endpoints, event);
+  await serverHooks.callHook("headersPreRequest", headers, event);
   try {
     const response = await globalThis.$fetch.raw(
       path,
