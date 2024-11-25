@@ -178,6 +178,19 @@ export default defineNuxtModule<ModuleOptions>({
       schemaEndpointIds.length = 0
     }
 
+    // Server-side imports
+    if (nuxt.options.nitro.imports !== false) {
+      nuxt.options.nitro.imports = defu(nuxt.options.nitro.imports, {
+        presets: [
+          {
+            from: resolve('./runtime/server/handler'),
+            imports: [
+              'serverHooks',
+            ],
+          },
+        ],
+      })
+    }
     // Add Nuxt server route to proxy the API request server-side
     addServerHandler({
       route: joinURL('/api', options.server!.basePath!, ':endpointId'),

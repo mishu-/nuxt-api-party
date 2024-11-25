@@ -24,7 +24,6 @@ export interface ServerHooks {
 
 export const serverHooks = createHooks<ServerHooks>()
 
-
 export default defineEventHandler(async (event) => {
   const endpointId = getRouterParam(event, 'endpointId')!
   const apiParty = useRuntimeConfig().apiParty as Required<ModuleOptions>
@@ -72,8 +71,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Add any server runtime headers you might want
-  await serverHooks.callHook(endpoints, event)
-
+  await serverHooks.callHook('headersPreRequest', headers, event)
 
   try {
     const response = await globalThis.$fetch.raw<ArrayBuffer>(
