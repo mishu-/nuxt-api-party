@@ -118,8 +118,9 @@ export default defineNuxtModule<ModuleOptions>({
     if (
       !Object.keys(options.endpoints!).length
       && !nuxt.options.runtimeConfig.apiParty
-    )
+    ) {
       logger.error('Missing API endpoints configuration. Please check the `apiParty` module configuration in `nuxt.config.ts`.')
+    }
 
     // Private runtime config
     nuxt.options.runtimeConfig.apiParty = defu(
@@ -137,7 +138,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.callHook('api-party:extend', resolvedOptions)
 
     // Write options to public runtime config if client requests are enabled
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // eslint-disable-next-line ts/ban-ts-comment
     // @ts-ignore: `client` types are not compatible
     nuxt.options.runtimeConfig.public.apiParty = defu(
       nuxt.options.runtimeConfig.public.apiParty as Required<ModuleOptions>,
@@ -198,7 +199,7 @@ export default defineNuxtModule<ModuleOptions>({
       method: 'post',
     })
 
-    nuxt.hook('nitro:config', (config) => {
+    nuxt.hooks.hook('nitro:config', (config) => {
       // Inline local server handler dependencies into Nitro bundle
       // Needed to circumvent "cannot find module" error in `server.ts` for the `utils` import
       config.externals ||= {}
@@ -308,7 +309,7 @@ ${await generateDeclarationTypes(schemaEndpoints, resolvedOptions.openAPITS)}
         },
       })
 
-      nuxt.hook('prepare:types', ({ references }) => {
+      nuxt.hooks.hook('prepare:types', ({ references }) => {
         references.push({ path: resolve(nuxt.options.buildDir, `module/${moduleName}-schema.d.ts`) })
       })
     }
